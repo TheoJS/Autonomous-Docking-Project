@@ -1,1 +1,34 @@
+from dronekit import connect, VehicleMode, LocationGlobalRelative
+import time
+
+
+#Set up option parsing to get connection string
+import argparse  
+parser = argparse.ArgumentParser(description='Commands vehicle using vehicle.simple_goto.')
+parser.add_argument('--connect', 
+                   help="Vehicle connection target string. If not specified, SITL automatically started and used.")
+args = parser.parse_args()
+
+connection_string = args.connect
+target_altitude=5
+
+
+#Return error if no connection found
+if not args.connect:
+    print "No connected vehicle"
+
+
+# Connect to the Vehicle
+print 'Connecting to vehicle on: %s' % connection_string
+vehicle = connect(connection_string, wait_ready=True)
+
+# Print GPS location
+for x in (0, 30)
+  print "Global Location: %s" % vehicle.location.global_frame
+  time.sleep(1)
+  
+
+#Close vehicle object before exiting script
+print "Close vehicle object"
+vehicle.close()
 

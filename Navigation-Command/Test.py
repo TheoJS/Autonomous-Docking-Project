@@ -10,7 +10,7 @@ parser.add_argument('--connect',
 args = parser.parse_args()
 
 connection_string = args.connect
-target_altitude=5
+target_altitude=4
 
 
 #Return error if no connection found
@@ -68,7 +68,7 @@ vehicle.airspeed = 3
 
 #######################################################
 #Add destination calculation algorithm here
-target_point = LocationGlobalRelative(-35.363244, 149.168801, 20)
+target_point = LocationGlobalRelative(-35.363244, 149.168801, 4)
 #######################################################
 
 

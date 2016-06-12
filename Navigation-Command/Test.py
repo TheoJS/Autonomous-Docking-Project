@@ -1,4 +1,5 @@
 from dronekit import connect, VehicleMode, LocationGlobalRelative
+from video_tracking.video_targeting import video_targeting
 import time
 import argparse  
 import math

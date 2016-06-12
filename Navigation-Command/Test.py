@@ -63,7 +63,7 @@ def goto(vehicle, position)
   
   vehicle.simple_goto(plat_pos)
   
-  while (get_distance_metres(uav_pos, plat_pos)<1.5) && (timer < 20):
+  while (get_distance_metres(uav_pos, plat_pos)<1.5) and (timer < 20):
   #(math.sqrt(((uav_pos.lat-plat_pos.lat)*Re*math.pi/180)**2 + ((uav_pos.lon-plat_pos.lat)*Re*math.pi/180)**2) < 1.5) && (timer < 20):
     time.sleep(0.5)
     timer = timer + 0.5

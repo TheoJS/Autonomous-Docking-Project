@@ -1,6 +1,7 @@
 from dronekit import connect, VehicleMode, LocationGlobalRelative
 import time
 import argparse  
+import math
 
 
 
@@ -54,7 +55,7 @@ def arm_and_takeoff(aTargetAltitude):
 
 
 def goto(vehicle, position)
-#WARNING: doesn't work for a mooving platform
+# WARNING: doesn't work for a mooving platform
   Re = 6371000
   timer = 0
   uav_pos = vehicle.location.global_relative_frame
@@ -62,7 +63,8 @@ def goto(vehicle, position)
   
   vehicle.simple_goto(plat_pos)
   
-  while (sqrt(((uav_pos.lat-plat_pos.lat)*Re)**2 + ((uav_pos.lon-plat_pos.lat)*Re)**2) < 1.5) && (timer < 20):
+  while (get_distance_metres(uav_pos, plat_pos)<1.5) && (timer < 20):
+  #(math.sqrt(((uav_pos.lat-plat_pos.lat)*Re*math.pi/180)**2 + ((uav_pos.lon-plat_pos.lat)*Re*math.pi/180)**2) < 1.5) && (timer < 20):
     time.sleep(0.5)
     timer = timer + 0.5
     uav_pos = vehicle.location.global_relative_frame
@@ -119,11 +121,11 @@ vehicle.airspeed = 3
 
 #Get GPS from platform
 #######################################################
-#See with the guys
+#See with the guys DON'T FORGET TO FILTER TO AVOID JUMPS
 latitude = 52.073743
 longitude = -0.630707
 altitude = 4
-platform_pos = LocationGlobalRelative(-35.363244, 149.168801, 4)
+platform_pos = LocationGlobalRelative(52.073743, -0.630707, 4)
 #######################################################
 
 
@@ -143,6 +145,8 @@ while True:
           counter = counter+1
       else:
         counter = 0
+        roi = locationGlobalRelative(vehicle.location.global_relative_frame.lat, vehicle.location.global_relative_frame.lon, -100)
+        vehicle.gimbal.target_location(vehicle.vehicle.location.global_relative_frame)
         #The camera is turned toward the ground and the coord
         #frame of the image is the same as the coord frame of 
         #the quadcopter horizontal plane (small angles approx)
@@ -154,10 +158,10 @@ while True:
         
         yT = yT-img_width/2
         xT = xT-img_height/2
-        vy_targ =  max(yT/150*alt, 1)
+        vy_targ =  max(yT/150*alt, 1) # move slower at reduce altitude
         vx_targ = max(xT/150*alt, 1)
-        vz_targ = -max(1/sqrt((xT/150)**2 + (yT/150)**2), 0.2) 
-        #the closer it is to the target the faster it goes down, limited to 0.2m/s
+        vz_targ = -max(1/sqrt((xT/150)**2 + (yT/150)**2), 0.15) 
+        #the closer it is to the target the faster it goes down, limited to 0.15m/s
 
 
 #######################################################

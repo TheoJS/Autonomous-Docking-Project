@@ -1,5 +1,5 @@
 from dronekit import connect, VehicleMode, LocationGlobalRelative
-from video_tracking.video_targeting import video_targeting
+from video_tracking.camera import Camera
 from range_finder.lidar_lite import Lidar_Lite
 import time
 import argparse  
@@ -90,7 +90,7 @@ def send_ned_velocity(velocity_x, velocity_y, velocity_z, duration):
 
 
 
-# CONNECT TO VEHICLE #####################################################################################################
+# MAIN #####################################################################################################
 
 #Set up option parsing to get connection string
 parser = argparse.ArgumentParser(description='Commands vehicle using vehicle.simple_goto.')
@@ -112,9 +112,6 @@ print 'Connecting to vehicle on: %s' % connection_string
 vehicle = connect(connection_string, wait_ready=True)
 
 
-
-# MAIN ###################################################################################################################
-
 #Take off
 arm_and_takeoff(target_altitude)
 
@@ -134,12 +131,16 @@ platform_pos = LocationGlobalRelative(52.073743, -0.630707, 4)
 while True:
   #Travel toward the target
   goto(vehicle, platform_pos)
+  
+  #Init the tracking camera
+  tracker = Camera()
   counter = 0
 
     while True:
-      yT, xT, img_width, img_height = video_targeting() # quadcopter frame: y=horizontal 
+      #try to get target coordinates, returns None if target not found
+      (yT, xT, img_width, img_height) = tracker.seek_target # quadcopter frame: y=horizontal 
       #axis (right pos), x=vertical axis (top pos)
-      if ((xT, yT, img_width, img_height) == (None, None):
+      if ((xT, yT) == (None, None):
         if counter == 5
           counter = 0
           break
